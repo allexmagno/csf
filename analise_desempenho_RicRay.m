@@ -1,10 +1,11 @@
+
 clear all
 close all
 clc
 
 Rs = 100e3;                                                                % Taxa de símbolos na entrada do canal (equivalente a tava de transmissão)
 num_sym = 1e6;                                                             % Numero de símbolos a ser transmitido
-fd = 300;                                                                  % Doppler
+fd = 4;                                                                  % Doppler
 t = 0:1/Rs:num_sym/Rs-(1/Rs);      
 k = 10;                                                                  % Parâmetro Riciano
 M = 2;                                                                     % Numero de bits/simbolo
