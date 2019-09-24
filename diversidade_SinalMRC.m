@@ -1,4 +1,4 @@
-%%  DIVERSIDADE - Comparação entre o recebimento em uma antena e em duas
+%%  DIVERSIDADE - MRC
 %   Engenharia de Telecomunicações - IFSC/SJ
 %   Comunicação sem Fio - 2019/2
 %   Allex Magno Andrade
@@ -39,23 +39,16 @@ for SNR = 0:25                                                             % Var
    sinalEqRay1 = sinalRxRay1Awgn./ganho_ray1;                              % Eliminando os efeitos de rotação de fase e amplitude do ganho do sinal
    sinalEqRay2 = sinalRxRay2Awgn./ganho_ray2;                              % Eliminando os efeitos de rotação de fase e amplitude do ganho do sinal
 
-   for t = 1:length(info_mod)                                              % Simulando a recepção em duas antenas
-       if abs(ganho_ray1(t)) > abs(ganho_ray2(t))                          % Demodulando o sinal equalizado de acordo com o maior ganho
-            sinalDemRay(t) = pskdemod(sinalEqRay1(t), M);                  
-       else
-            sinalDemRay(t) = pskdemod(sinalEqRay2(t), M);
-       end
-   end
+   sinal_MRC = (sinalRxRay1Awgn.*conj(ganho_ray1) + sinalRxRay2Awgn.*conj(ganho_ray2));
 
-   sinalDemRay1 = pskdemod(sinalEqRay1, M);                                % Recepção em uma antena
-   [num(SNR+1), taxa(SNR+1)] = biterr(info, sinalDemRay1);                 % Analise de erros/símbolos que chegam em 1 receptor
-   [num2(SNR+1), taxa2(SNR+1)] = biterr(info, transpose(sinalDemRay));     % Analise de erraos/símbolo em dois receptores
+   [num(SNR+1), taxa(SNR+1)] = biterr(info, sinal_MRC);                    % Analise de erros/símbolos que chegam em 1 receptor
 end
 
 %% Plots
 
 figure(1)
-semilogy(0:25,taxa, 'r', 0:25, taxa2, 'b');xlabel('SNR [dB]')
+semilogy(0:25,taxa);
+xlabel('SNR [dB]')
 ylabel('BER')
 legend('1 receptor', '2 receptores')
 title('Desempenho')

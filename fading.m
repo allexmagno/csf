@@ -1,3 +1,9 @@
+%%  Comparação entre o recebimento em uma antena e em duas antenas
+%   Engenharia de Telecomunicações - IFSC/SJ
+%   Comunicação sem Fio - 2019/2
+%   Allex Magno Andrade
+%%
+
 clear all
 close all
 clc

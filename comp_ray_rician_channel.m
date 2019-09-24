@@ -1,3 +1,9 @@
+%%  Comparação entre Canal Riciano e de Rayleigh
+%   Engenharia de Telecomunicações - IFSC/SJ
+%   Comunicação sem Fio - 2019/2
+%   Allex Magno Andrade
+%%
+
 clear all
 close all
 clc

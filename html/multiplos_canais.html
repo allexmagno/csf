@@ -1,0 +1,208 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DIVERSIDADE - Compara&ccedil;&atilde;o entre o recebimento em uma antena e em duas</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-09-24"><meta name="DC.source" content="multiplos_canais.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DIVERSIDADE - Compara&ccedil;&atilde;o entre o recebimento em uma antena e em duas</h1><!--introduction--><pre class="language-matlab">Engenharia <span class="string">de</span> <span class="string">Telecomunica&ccedil;&otilde;es</span> <span class="string">-</span> <span class="string">IFSC/SJ</span>
+Comunica&ccedil;&atilde;o sem <span class="string">Fio</span> <span class="string">-</span> <span class="string">2019/2</span>
+Allex <span class="string">Magno</span> <span class="string">Andrade</span>
+</pre><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Plots</a></li></ul></div><pre class="codeinput">clear <span class="string">all</span>
+close <span class="string">all</span>
+clc
+
+Rs = 10e3;                                                                 <span class="comment">% Taxa de s&iacute;mbolos na entrada do canal (equivalente a tava de transmiss&atilde;o)</span>
+num_sym = 1e4;                                                             <span class="comment">% Numero de s&iacute;mbolos a ser transmitido</span>
+fd = 10;                                                                   <span class="comment">% Doppler</span>
+t = 0:1/Rs:num_sym/Rs-(1/Rs);
+M = 2;                                                                     <span class="comment">% Numero de bits/simbolo</span>
+info = randint(num_sym,1,M);                                               <span class="comment">% Informa&ccedil;&atilde;o e ser transmitido</span>
+info_mod = pskmod(info, M);                                                <span class="comment">% Modula&ccedil;&atilde;o PSK</span>
+
+canal_ray1 = rayleighchan(1/Rs, fd);                                       <span class="comment">% Gerando o objeto que representa o canal</span>
+canal_ray2 = rayleighchan(1/Rs, fd);                                       <span class="comment">% O doppler indica que o canal est&aacute; variando, mas n&atilde;o afeta tanto o canal</span>
+
+canal_ray1.StoreHistory = 1;                                               <span class="comment">% habilitando a grava&ccedil;&atilde;o dos ganhos do canal</span>
+canal_ray2.StoreHistory = 1;
+
+
+sinal_rec_ray1 = filter(canal_ray1, info_mod);                             <span class="comment">% Transmiss&atilde;o do sinal modulado por um canal sem fio</span>
+sinal_rec_ray2 = filter(canal_ray2, info_mod);                             <span class="comment">% Recep&ccedil;&atilde;o na antena ap&oacute;s passar pelo canal</span>
+sinal_rec2 = sinal_rec_ray1 + sinal_rec_ray2;
+
+ganho_ray1 = canal_ray1.PathGains;                                         <span class="comment">% Salvando os ganhos para conhecer o canal</span>
+ganho_ray2 = canal_ray2.PathGains;
+
+<span class="keyword">for</span> SNR = 0:25                                                             <span class="comment">% Varia&ccedil;&atilde;o do SNR</span>
+
+   sinalRxRay1Awgn = awgn(sinal_rec_ray1, SNR);                            <span class="comment">% Recebendo o sinal com o ru&iacute;do gaussiano</span>
+   sinalRxRay2Awgn = awgn(sinal_rec_ray2, SNR);
+
+   sinalEqRay1 = sinalRxRay1Awgn./ganho_ray1;                              <span class="comment">% Eliminando os efeitos de rota&ccedil;&atilde;o de fase e amplitude do ganho do sinal</span>
+   sinalEqRay2 = sinalRxRay2Awgn./ganho_ray2;                              <span class="comment">% Eliminando os efeitos de rota&ccedil;&atilde;o de fase e amplitude do ganho do sinal</span>
+
+   <span class="keyword">for</span> t = 1:length(info_mod)                                              <span class="comment">% Simulando a recep&ccedil;&atilde;o em duas antenas</span>
+       <span class="keyword">if</span> abs(ganho_ray1(t)) &gt; abs(ganho_ray2(t))                          <span class="comment">% Demodulando o sinal equalizado de acordo com o maior ganho</span>
+            sinalDemRay(t) = pskdemod(sinalEqRay1(t), M);
+       <span class="keyword">else</span>
+            sinalDemRay(t) = pskdemod(sinalEqRay2(t), M);
+       <span class="keyword">end</span>
+   <span class="keyword">end</span>
+
+   sinalDemRay1 = pskdemod(sinalEqRay1, M);                                <span class="comment">% Recep&ccedil;&atilde;o em uma antena</span>
+   [num(SNR+1), taxa(SNR+1)] = biterr(info, sinalDemRay1);                 <span class="comment">% Analise de erros/s&iacute;mbolos que chegam em 1 receptor</span>
+   [num2(SNR+1), taxa2(SNR+1)] = biterr(info, transpose(sinalDemRay));     <span class="comment">% Analise de erraos/s&iacute;mbolo em dois receptores</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Warning: This is an obsolete function and may be removed in the future. Please
+use RANDI instead. 
+</pre><h2>Plots<a name="2"></a></h2><pre class="codeinput">figure(1)
+semilogy(0:25,taxa, <span class="string">'r'</span>, 0:25, taxa2, <span class="string">'b'</span>);xlabel(<span class="string">'SNR [dB]'</span>)
+ylabel(<span class="string">'BER'</span>)
+legend(<span class="string">'1 receptor'</span>, <span class="string">'2 receptores'</span>)
+title(<span class="string">'Desempenho'</span>)
+
+figure(2)
+plot(20*log10(abs(ganho_ray1)));
+hold <span class="string">on</span>
+plot(20*log10(abs(ganho_ray2)));
+
+ganho_eq = max(ganho_ray1, ganho_ray2);
+
+plot(20*log10(abs(ganho_eq)), <span class="string">'.'</span>);
+hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="multiplos_canais_01.png" alt=""> <img vspace="5" hspace="5" src="multiplos_canais_02.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%  DIVERSIDADE - Comparação entre o recebimento em uma antena e em duas
+%   Engenharia de Telecomunicações - IFSC/SJ
+%   Comunicação sem Fio - 2019/2
+%   Allex Magno Andrade
+%%
+
+clear all
+close all
+clc
+
+Rs = 10e3;                                                                 % Taxa de símbolos na entrada do canal (equivalente a tava de transmissão)
+num_sym = 1e4;                                                             % Numero de símbolos a ser transmitido
+fd = 10;                                                                   % Doppler
+t = 0:1/Rs:num_sym/Rs-(1/Rs);      
+M = 2;                                                                     % Numero de bits/simbolo
+info = randint(num_sym,1,M);                                               % Informação e ser transmitido
+info_mod = pskmod(info, M);                                                % Modulação PSK
+
+canal_ray1 = rayleighchan(1/Rs, fd);                                       % Gerando o objeto que representa o canal
+canal_ray2 = rayleighchan(1/Rs, fd);                                       % O doppler indica que o canal está variando, mas não afeta tanto o canal
+
+canal_ray1.StoreHistory = 1;                                               % habilitando a gravação dos ganhos do canal
+canal_ray2.StoreHistory = 1;
+
+
+sinal_rec_ray1 = filter(canal_ray1, info_mod);                             % Transmissão do sinal modulado por um canal sem fio
+sinal_rec_ray2 = filter(canal_ray2, info_mod);                             % Recepção na antena após passar pelo canal
+sinal_rec2 = sinal_rec_ray1 + sinal_rec_ray2;
+
+ganho_ray1 = canal_ray1.PathGains;                                         % Salvando os ganhos para conhecer o canal
+ganho_ray2 = canal_ray2.PathGains;
+
+for SNR = 0:25                                                             % Variação do SNR
+    
+   sinalRxRay1Awgn = awgn(sinal_rec_ray1, SNR);                            % Recebendo o sinal com o ruído gaussiano
+   sinalRxRay2Awgn = awgn(sinal_rec_ray2, SNR);
+   
+   sinalEqRay1 = sinalRxRay1Awgn./ganho_ray1;                              % Eliminando os efeitos de rotação de fase e amplitude do ganho do sinal
+   sinalEqRay2 = sinalRxRay2Awgn./ganho_ray2;                              % Eliminando os efeitos de rotação de fase e amplitude do ganho do sinal
+
+   for t = 1:length(info_mod)                                              % Simulando a recepção em duas antenas
+       if abs(ganho_ray1(t)) > abs(ganho_ray2(t))                          % Demodulando o sinal equalizado de acordo com o maior ganho
+            sinalDemRay(t) = pskdemod(sinalEqRay1(t), M);                  
+       else
+            sinalDemRay(t) = pskdemod(sinalEqRay2(t), M);
+       end
+   end
+
+   sinalDemRay1 = pskdemod(sinalEqRay1, M);                                % Recepção em uma antena
+   [num(SNR+1), taxa(SNR+1)] = biterr(info, sinalDemRay1);                 % Analise de erros/símbolos que chegam em 1 receptor
+   [num2(SNR+1), taxa2(SNR+1)] = biterr(info, transpose(sinalDemRay));     % Analise de erraos/símbolo em dois receptores
+end
+
+%% Plots
+
+figure(1)
+semilogy(0:25,taxa, 'r', 0:25, taxa2, 'b');xlabel('SNR [dB]')
+ylabel('BER')
+legend('1 receptor', '2 receptores')
+title('Desempenho')
+
+figure(2)
+plot(20*log10(abs(ganho_ray1)));
+hold on
+plot(20*log10(abs(ganho_ray2)));
+
+ganho_eq = max(ganho_ray1, ganho_ray2);
+
+plot(20*log10(abs(ganho_eq)), '.');
+hold off
+##### SOURCE END #####
+--></body></html>
